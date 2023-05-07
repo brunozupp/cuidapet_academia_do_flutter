@@ -10,6 +10,8 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    Modular.setInitialRoute("/auth");
+
     Modular.setObservers([
       Asuka.asukaHeroController, //This line is needed for the Hero widget to work
     ]);
