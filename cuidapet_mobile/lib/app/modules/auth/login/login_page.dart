@@ -9,7 +9,9 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Login"),
       ),
-      body: const SizedBox.shrink(),
+      body: Column(
+        children: [],
+      ),
     );
   }
 }
