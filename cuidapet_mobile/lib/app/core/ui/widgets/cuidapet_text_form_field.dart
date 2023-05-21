@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cuidapet_mobile/app/core/ui/extensions/theme_extension.dart';
   
-class CuidapetTextFormFieldDart extends StatelessWidget {
+class CuidapetTextFormField extends StatelessWidget {
 
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
@@ -10,7 +10,7 @@ class CuidapetTextFormFieldDart extends StatelessWidget {
   final bool obscureText;
   final ValueNotifier<bool> _obscureTextVN;
 
-  CuidapetTextFormFieldDart({
+  CuidapetTextFormField({
     Key? key,
     this.controller,
     this.validator,
