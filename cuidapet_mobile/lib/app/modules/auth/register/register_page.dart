@@ -15,16 +15,16 @@ class RegisterPage extends StatelessWidget {
         title: const Text("Cadastrar Usuário"),
         elevation: 0,
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: EdgeInsets.all(15),
           child: Column(
             children: [
-              const SizedBox(
+              SizedBox(
                 height: 5,
               ),
               CuidapetLogo(),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               _RegisterForm(),

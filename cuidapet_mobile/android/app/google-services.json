@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "536712258030",
+    "project_id": "cuidapet-bc1ab",
+    "storage_bucket": "cuidapet-bc1ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:536712258030:android:0a15e78efc4d0f5b7a2eff",
+        "android_client_info": {
+          "package_name": "br.com.novelitech.cuidapet_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_IZ2-KEZp4luPzyULD7r9G_-Ql1QZQqM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
