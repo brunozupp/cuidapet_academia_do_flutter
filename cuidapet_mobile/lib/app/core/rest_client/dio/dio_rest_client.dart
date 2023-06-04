@@ -1,11 +1,11 @@
 import 'package:cuidapet_mobile/app/core/helpers/constants.dart';
 import 'package:cuidapet_mobile/app/core/helpers/environments.dart';
-import 'package:cuidapet_mobile/app/core/rest_client/rest_client.dart';
+import 'package:cuidapet_mobile/app/core/rest_client/i_rest_client.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/rest_client_excepiton.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/rest_client_response.dart';
 import 'package:dio/dio.dart';
 
-class DioRestClient implements RestClient {
+class DioRestClient implements IRestClient {
 
   late final Dio _dio;
 
@@ -26,13 +26,13 @@ class DioRestClient implements RestClient {
   }
 
   @override
-  RestClient auth() {
+  IRestClient auth() {
     _defaultOptions.extra["auth_required"] = true;
     return this;
   }
 
   @override
-  RestClient unauth() {
+  IRestClient unauth() {
     _defaultOptions.extra["auth_required"] = false;
     return this;
   }

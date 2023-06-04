@@ -1,9 +1,9 @@
 import 'package:cuidapet_mobile/app/core/rest_client/rest_client_response.dart';
 
-abstract class RestClient {
+abstract class IRestClient {
   
-  RestClient auth();
-  RestClient unauth();
+  IRestClient auth();
+  IRestClient unauth();
 
   Future<RestClientResponse<T>> post<T>(
     String path, {
