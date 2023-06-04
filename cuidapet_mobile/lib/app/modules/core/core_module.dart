@@ -1,4 +1,5 @@
 import 'package:cuidapet_mobile/app/core/local_storage/i_local_storage.dart';
+import 'package:cuidapet_mobile/app/core/local_storage/local_secure_storage/local_secure_storage.dart';
 import 'package:cuidapet_mobile/app/core/local_storage/local_storage/local_storage.dart';
 import 'package:cuidapet_mobile/app/core/logger/app_logger.dart';
 import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
@@ -15,5 +16,6 @@ class CoreModule extends Module {
     Bind.lazySingleton<IRestClient>((i) => DioRestClient(), export: true),
     Bind.lazySingleton<IAppLogger>((i) => AppLogger(), export: true),
     Bind.lazySingleton<ILocalStorage>((i) => LocalStorage(), export: true),
+    Bind.lazySingleton<ILocalSecureStorage>((i) => LocalSecureStorage(), export: true),
   ];
 }

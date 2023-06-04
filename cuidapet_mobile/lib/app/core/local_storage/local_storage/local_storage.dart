@@ -8,7 +8,7 @@ class LocalStorage implements ILocalStorage {
   @override
   Future<void> clean() async {
     final instance = await _instance;
-    instance.clear();
+    await instance.clear();
   }
 
   @override
@@ -26,7 +26,7 @@ class LocalStorage implements ILocalStorage {
   @override
   Future<void> remove(String key) async {
     final instance = await _instance;
-    instance.remove(key);
+    await instance.remove(key);
   }
 
   @override
@@ -35,19 +35,19 @@ class LocalStorage implements ILocalStorage {
 
     switch(V) {
       case String:
-        instance.setString(key, value as String);
+        await instance.setString(key, value as String);
       break;
       case int:
-        instance.setInt(key, value as int);
+        await instance.setInt(key, value as int);
       break;
       case bool:
-        instance.setBool(key, value as bool);
+        await instance.setBool(key, value as bool);
       break;
       case double:
-        instance.setDouble(key, value as double);
+        await instance.setDouble(key, value as double);
       break;
       case List<String>:
-        instance.setStringList(key, value as List<String>);
+        await instance.setStringList(key, value as List<String>);
       break;
       default:
         throw Exception("Type is not supported");
