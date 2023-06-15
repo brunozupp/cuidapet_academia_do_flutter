@@ -27,7 +27,11 @@ abstract class RegisterControllerBase with Store {
     try {
       CuidapetLoader.show();
       
-      await _userService.register(email: email, password: password);
+      await _userService.register(
+        email: email,
+        password: password,
+      );
+      
       CuidapetMessages.info("Enviamos um email de confirmação, por favor, olhe sua caixa de email");
       
     } on UserExistsException {

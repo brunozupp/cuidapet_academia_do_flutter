@@ -11,14 +11,14 @@ class _RegisterFormState extends State<_RegisterForm> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final _loginEC = TextEditingController();
+  final _emailEC = TextEditingController();
   final _passwordEC = TextEditingController();
 
   final _controller = Modular.get<RegisterController>();
 
   @override
   void dispose() {
-    _loginEC.dispose();
+    _emailEC.dispose();
     _passwordEC.dispose();
 
     super.dispose();
@@ -31,11 +31,11 @@ class _RegisterFormState extends State<_RegisterForm> {
       child: Column(
         children: [
           CuidapetTextFormField(
-            controller: _loginEC,
-            label: "Login",
+            controller: _emailEC,
+            label: "Email",
             validator: Validatorless.multiple([
-              Validatorless.required("Login obrigatório"),
-              Validatorless.email("Login deve ser um email válido"),
+              Validatorless.required("Email obrigatório"),
+              Validatorless.email("Deve ser um email válido"),
             ]),
           ),
           const SizedBox(
@@ -73,7 +73,7 @@ class _RegisterFormState extends State<_RegisterForm> {
 
               if(formValid) {
                 _controller.register(
-                  email: _loginEC.text,
+                  email: _emailEC.text,
                   password: _passwordEC.text,
                 );
               }
