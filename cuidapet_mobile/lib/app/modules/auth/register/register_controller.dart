@@ -1,5 +1,7 @@
+import 'package:cuidapet_mobile/app/core/exceptions/user_exists_exception.dart';
 import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
 import 'package:cuidapet_mobile/app/core/ui/widgets/cuidapet_loader.dart';
+import 'package:cuidapet_mobile/app/core/ui/widgets/cuidapet_messages.dart';
 import 'package:cuidapet_mobile/app/services/user/i_user_service.dart';
 import 'package:mobx/mobx.dart';
 
@@ -22,9 +24,19 @@ abstract class RegisterControllerBase with Store {
     required String email,
     required String password,
   }) async {
-    CuidapetLoader.show();
-
-
-    CuidapetLoader.hide();
+    try {
+      CuidapetLoader.show();
+      
+      await _userService.register(email: email, password: password);
+      
+      
+    } on UserExistsException {
+      CuidapetMessages.alert("Email já utilizado, por favor, escolha outro");
+    } catch(e,s) {
+      _logger.error("Erro ao registrar usuário", e, s);
+      CuidapetMessages.alert("Email já utilizado, por favor, escolha outro");
+    } finally {
+      CuidapetLoader.hide();
+    }
   }
 }
