@@ -1,12 +1,19 @@
 import 'package:cuidapet_mobile/app/modules/auth/home/auth_home_page.dart';
 import 'package:cuidapet_mobile/app/modules/auth/login/login_module.dart';
 import 'package:cuidapet_mobile/app/modules/auth/register/register_module.dart';
+import 'package:cuidapet_mobile/app/repositories/user/i_user_repository.dart';
+import 'package:cuidapet_mobile/app/repositories/user/user_repository.dart';
+import 'package:cuidapet_mobile/app/services/user/i_user_service.dart';
+import 'package:cuidapet_mobile/app/services/user/user_service.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AuthModule extends Module {
 
    @override
-   List<Bind> get binds => [];
+   List<Bind> get binds => [
+    Bind.lazySingleton<IUserRepository>((i) => UserRepository()),
+    Bind.lazySingleton<IUserService>((i) => UserService()),
+   ];
 
    @override
    List<ModularRoute> get routes => [
