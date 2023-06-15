@@ -1,4 +1,4 @@
-import 'package:cuidapet_mobile/app/core/local_storage/i_local_storage.dart';
+import 'package:cuidapet_mobile/app/core/local_storage/local_storage/i_local_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage implements ILocalStorage {

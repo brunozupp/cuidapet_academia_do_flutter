@@ -28,7 +28,5 @@ class Environments {
     } else {
       await dotenv.load(fileName: ".env");
     }
-
-    
   }
 }
