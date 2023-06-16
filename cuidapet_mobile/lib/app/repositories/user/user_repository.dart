@@ -44,5 +44,39 @@ class UserRepository implements IUserRepository {
       );
     }
   }
+  
+  @override
+  Future<String> login({
+    required String email,
+    required String password,
+  }) async {
+    
+    try {
+      final result = await _restClient.unauth().post(
+        "/auth/",
+        data: {
+          "login": email,
+          "password": password,
+          "social_login": false,
+          "supplier_user": false,
+        }
+      );
+
+      return result.data["access_token"];
+    
+    } on RestClientExcepiton catch (e, s) {
+
+      if(e.statusCode == 403) {
+
+        _logger.error("Usuário inconsistente", e, s);
+
+        throw Failure(message: "Usuário inconsistente. Entre em contato com o suporte");
+      }
+
+      _logger.error("Erro ao realizar login", e, s);
+
+      throw Failure(message: "Erro ao realizar login, tente novamente mais tarde");
+    }
+  }
 
 }

@@ -18,6 +18,7 @@ class AuthModule extends Module {
     Bind.lazySingleton<IUserService>((i) => UserService(
       logger: i(),
       userRepository: i(),
+      localSecureStorage: i(),
     )),
    ];
 

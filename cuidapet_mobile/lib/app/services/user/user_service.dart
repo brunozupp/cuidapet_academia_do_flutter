@@ -1,6 +1,8 @@
 import 'package:cuidapet_mobile/app/core/exceptions/failure.dart';
 import 'package:cuidapet_mobile/app/core/exceptions/user_exists_exception.dart';
 import 'package:cuidapet_mobile/app/core/exceptions/user_not_exists_exception.dart';
+import 'package:cuidapet_mobile/app/core/helpers/constants.dart';
+import 'package:cuidapet_mobile/app/core/local_storage/local_secure_storage/i_local_secure_storage.dart';
 import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
 import 'package:cuidapet_mobile/app/repositories/user/i_user_repository.dart';
 import 'package:cuidapet_mobile/app/services/user/i_user_service.dart';
@@ -10,12 +12,15 @@ class UserService implements IUserService {
   
   final IAppLogger _logger;
   final IUserRepository _userRepository;
+  final ILocalSecureStorage _localSecureStorage;
 
   UserService({
     required IAppLogger logger,
     required IUserRepository userRepository,
+    required ILocalSecureStorage localSecureStorage,
   }) : _logger = logger,
-       _userRepository = userRepository;
+       _userRepository = userRepository,
+       _localSecureStorage = localSecureStorage;
   
   @override
   Future<void> register({
@@ -82,7 +87,12 @@ class UserService implements IUserService {
           throw Failure(message: "Email não confirmado, por favor, verifique sua caixa de spam");
         }
       
-        
+        final accessToken = await _userRepository.login(
+          email: email,
+          password: password,
+        );
+
+        await _saveAccessToken(accessToken: accessToken);
       
       } else {
       
@@ -98,4 +108,9 @@ class UserService implements IUserService {
     }
   }
 
+  Future<void> _saveAccessToken({
+    required String accessToken,
+  }) async {
+    _localSecureStorage.write(Constants.LOCAL_STORAGE_ACCESS_TOKEN_KEY, accessToken);
+  }
 }
