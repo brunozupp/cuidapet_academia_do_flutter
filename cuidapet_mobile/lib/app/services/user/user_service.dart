@@ -93,6 +93,8 @@ class UserService implements IUserService {
         );
 
         await _saveAccessToken(accessToken: accessToken);
+
+        await _confirmLogin();
       
       } else {
       
@@ -112,5 +114,14 @@ class UserService implements IUserService {
     required String accessToken,
   }) async {
     _localSecureStorage.write(Constants.LOCAL_STORAGE_ACCESS_TOKEN_KEY, accessToken);
+  }
+  
+  Future<void> _confirmLogin() async {
+    
+    final confirmLoginModel = await _userRepository.confirmLogin();
+
+    await _saveAccessToken(accessToken: confirmLoginModel.accessToken);
+
+    await _localSecureStorage.write(Constants.LOCAL_STORAGE_REFRESH_TOKEN_KEY, confirmLoginModel.refreshToken);
   }
 }

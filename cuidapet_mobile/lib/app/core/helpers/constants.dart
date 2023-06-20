@@ -8,4 +8,5 @@ class Constants {
   static const String ENV_REST_CLIENT_AUTH_REQUIRED_KEY = "auth_required";
 
   static const String LOCAL_STORAGE_ACCESS_TOKEN_KEY = "access_token";
+  static const String LOCAL_STORAGE_REFRESH_TOKEN_KEY = "refresh_token";
 }

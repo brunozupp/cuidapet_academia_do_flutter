@@ -1,3 +1,5 @@
+import 'package:cuidapet_mobile/app/models/confirm_login_model.dart';
+
 abstract class IUserRepository {
 
   Future<void> register({
@@ -9,4 +11,6 @@ abstract class IUserRepository {
     required String email,
     required String password,
   });
+
+  Future<ConfirmLoginModel> confirmLogin();
 }
