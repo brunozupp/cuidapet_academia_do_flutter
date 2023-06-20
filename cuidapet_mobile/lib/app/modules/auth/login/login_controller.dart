@@ -4,6 +4,7 @@ import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
 import 'package:cuidapet_mobile/app/core/ui/widgets/cuidapet_loader.dart';
 import 'package:cuidapet_mobile/app/core/ui/widgets/cuidapet_messages.dart';
 import 'package:cuidapet_mobile/app/services/user/i_user_service.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
 part 'login_controller.g.dart';
@@ -33,8 +34,16 @@ abstract class _LoginControllerBase with Store {
         email: email,
         password: password,
       );
+
+      CuidapetLoader.hide();
+
+      // Volta no auth para passar novamente pela reaction e ser redirecionado
+      // para a tela de home já que vai estar com o usuário logado preenchido
+      Modular.to.navigate("/auth/");
       
     } on Failure catch(e, s) {
+
+      CuidapetLoader.hide();
 
       final message = e.message ?? "Erro ao realizar login";
 
@@ -43,12 +52,12 @@ abstract class _LoginControllerBase with Store {
       
     } on UserNotExistsException {
 
+      CuidapetLoader.hide();
+
       const message = "Usuário não cadastrado";
 
       CuidapetMessages.alert(message);
       _logger.error(message);
-    } finally {
-      CuidapetLoader.hide();
     }
   }
 }

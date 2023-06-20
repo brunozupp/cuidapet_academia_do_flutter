@@ -6,6 +6,7 @@ import 'package:cuidapet_mobile/app/core/rest_client/dio/interceptors/auth_inter
 import 'package:cuidapet_mobile/app/core/rest_client/i_rest_client.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/rest_client_excepiton.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/rest_client_response.dart';
+import 'package:cuidapet_mobile/app/modules/core/auth/auth_store.dart';
 import 'package:dio/dio.dart';
 
 class DioRestClient implements IRestClient {
@@ -25,6 +26,7 @@ class DioRestClient implements IRestClient {
   DioRestClient({
     required ILocalSecureStorage localSecureStorage,
     required IAppLogger logger,
+    required AuthStore authStore,
     BaseOptions? baseOptions,
   }) {
     _dio = Dio(baseOptions ?? _defaultOptions);
@@ -33,7 +35,11 @@ class DioRestClient implements IRestClient {
     // vem depois. No caso LogInterceptor necessita de AuthInterceptor para
     // conseguir loggar as informações corretamente
     _dio.interceptors.addAll([
-      AuthInterceptor(localSecureStorage: localSecureStorage, logger: logger),
+      AuthInterceptor(
+        localSecureStorage: localSecureStorage,
+        logger: logger,
+        authStore: authStore,
+      ),
       LogInterceptor(requestBody: true, responseBody: true),
     ]);
   }
