@@ -14,7 +14,10 @@ class CoreModule extends Module {
   @override
   List<Bind> get binds => [
     Bind.lazySingleton<AuthStore>((i) => AuthStore(), export: true), // precisa do export para exportar para outros módulos
-    Bind.lazySingleton<IRestClient>((i) => DioRestClient(), export: true),
+    Bind.lazySingleton<IRestClient>((i) => DioRestClient(
+      localSecureStorage: i(),
+      logger: i(),
+    ), export: true),
     Bind.lazySingleton<IAppLogger>((i) => AppLogger(), export: true),
     Bind.lazySingleton<ILocalStorage>((i) => LocalStorage(), export: true),
     Bind.lazySingleton<ILocalSecureStorage>((i) => LocalSecureStorage(), export: true),

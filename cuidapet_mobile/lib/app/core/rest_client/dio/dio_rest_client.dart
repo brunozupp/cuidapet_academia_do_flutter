@@ -1,5 +1,8 @@
 import 'package:cuidapet_mobile/app/core/helpers/constants.dart';
 import 'package:cuidapet_mobile/app/core/helpers/environments.dart';
+import 'package:cuidapet_mobile/app/core/local_storage/local_secure_storage/i_local_secure_storage.dart';
+import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
+import 'package:cuidapet_mobile/app/core/rest_client/dio/interceptors/auth_interceptor.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/i_rest_client.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/rest_client_excepiton.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/rest_client_response.dart';
@@ -20,20 +23,30 @@ class DioRestClient implements IRestClient {
   );
 
   DioRestClient({
+    required ILocalSecureStorage localSecureStorage,
+    required IAppLogger logger,
     BaseOptions? baseOptions,
   }) {
     _dio = Dio(baseOptions ?? _defaultOptions);
+
+    // A ordem dos interceptors é importante, então os que dependem de algum outro
+    // vem depois. No caso LogInterceptor necessita de AuthInterceptor para
+    // conseguir loggar as informações corretamente
+    _dio.interceptors.addAll([
+      AuthInterceptor(localSecureStorage: localSecureStorage, logger: logger),
+      LogInterceptor(requestBody: true, responseBody: true),
+    ]);
   }
 
   @override
   IRestClient auth() {
-    _defaultOptions.extra["auth_required"] = true;
+    _defaultOptions.extra[Constants.ENV_REST_CLIENT_AUTH_REQUIRED_KEY] = true;
     return this;
   }
 
   @override
   IRestClient unauth() {
-    _defaultOptions.extra["auth_required"] = false;
+    _defaultOptions.extra[Constants.ENV_REST_CLIENT_AUTH_REQUIRED_KEY] = false;
     return this;
   }
 
