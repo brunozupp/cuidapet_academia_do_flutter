@@ -9,4 +9,5 @@ class Constants {
 
   static const String LOCAL_STORAGE_ACCESS_TOKEN_KEY = "access_token";
   static const String LOCAL_STORAGE_REFRESH_TOKEN_KEY = "refresh_token";
+  static const String LOCAL_STORAGE_USER_LOGGED_DATA_KEY = "refresh_token";
 }

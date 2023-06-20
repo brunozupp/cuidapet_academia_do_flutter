@@ -3,6 +3,7 @@ import 'package:cuidapet_mobile/app/core/exceptions/user_exists_exception.dart';
 import 'package:cuidapet_mobile/app/core/exceptions/user_not_exists_exception.dart';
 import 'package:cuidapet_mobile/app/core/helpers/constants.dart';
 import 'package:cuidapet_mobile/app/core/local_storage/local_secure_storage/i_local_secure_storage.dart';
+import 'package:cuidapet_mobile/app/core/local_storage/local_storage/i_local_storage.dart';
 import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
 import 'package:cuidapet_mobile/app/repositories/user/i_user_repository.dart';
 import 'package:cuidapet_mobile/app/services/user/i_user_service.dart';
@@ -13,14 +14,17 @@ class UserService implements IUserService {
   final IAppLogger _logger;
   final IUserRepository _userRepository;
   final ILocalSecureStorage _localSecureStorage;
+  final ILocalStorage _localStorage;
 
   UserService({
     required IAppLogger logger,
     required IUserRepository userRepository,
     required ILocalSecureStorage localSecureStorage,
+    required ILocalStorage localStorage,
   }) : _logger = logger,
        _userRepository = userRepository,
-       _localSecureStorage = localSecureStorage;
+       _localSecureStorage = localSecureStorage,
+       _localStorage = localStorage;
   
   @override
   Future<void> register({
@@ -95,6 +99,8 @@ class UserService implements IUserService {
         await _saveAccessToken(accessToken: accessToken);
 
         await _confirmLogin();
+
+        await _getUserData();
       
       } else {
       
@@ -123,5 +129,12 @@ class UserService implements IUserService {
     await _saveAccessToken(accessToken: confirmLoginModel.accessToken);
 
     await _localSecureStorage.write(Constants.LOCAL_STORAGE_REFRESH_TOKEN_KEY, confirmLoginModel.refreshToken);
+  }
+  
+  Future<void> _getUserData() async {
+
+    final userModel = await _userRepository.getUserLogged();
+
+    await _localStorage.write<String>(Constants.LOCAL_STORAGE_USER_LOGGED_DATA_KEY, userModel.toJson());
   }
 }
