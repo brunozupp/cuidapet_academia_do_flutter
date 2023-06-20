@@ -3,6 +3,8 @@ part of "../login_page.dart";
 class _LoginRegisterButtons extends StatelessWidget {
   const _LoginRegisterButtons({super.key});
 
+  final controller = Modular.get<IUserService>();
+
   @override
   Widget build(BuildContext context) {
     return Wrap(
