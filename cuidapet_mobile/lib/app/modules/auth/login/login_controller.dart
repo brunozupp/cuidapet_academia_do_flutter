@@ -3,6 +3,7 @@ import 'package:cuidapet_mobile/app/core/exceptions/user_not_exists_exception.da
 import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
 import 'package:cuidapet_mobile/app/core/ui/widgets/cuidapet_loader.dart';
 import 'package:cuidapet_mobile/app/core/ui/widgets/cuidapet_messages.dart';
+import 'package:cuidapet_mobile/app/models/social_login_type.dart';
 import 'package:cuidapet_mobile/app/services/user/i_user_service.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
@@ -58,6 +59,35 @@ abstract class _LoginControllerBase with Store {
 
       CuidapetMessages.alert(message);
       _logger.error(message);
+    }
+  }
+
+  Future<void> socialLogin({
+    required SocialLoginType type,
+  }) async {
+    try {
+
+      CuidapetLoader.show();
+
+      await _userService.socialLogin(
+        type: type,
+      );
+
+      CuidapetLoader.hide();
+
+      // Volta no auth para passar novamente pela reaction e ser redirecionado
+      // para a tela de home já que vai estar com o usuário logado preenchido
+      Modular.to.navigate("/auth/");
+      
+    } on Failure catch(e, s) {
+
+      CuidapetLoader.hide();
+
+      final message = e.message ?? "Erro ao realizar login";
+
+      CuidapetMessages.alert(message);
+      _logger.error(message, e, s);
+      
     }
   }
 }

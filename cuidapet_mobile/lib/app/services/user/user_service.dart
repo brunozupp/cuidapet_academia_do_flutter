@@ -149,30 +149,56 @@ class UserService implements IUserService {
     required SocialLoginType type,
   }) async {
 
-    final SocialNetworkModel socialModel;
-    final AuthCredential authCredential;
-    final firebaseAuth = FirebaseAuth.instance;
-    
+    try {
+      final SocialNetworkModel socialModel;
+      final AuthCredential authCredential;
+      final firebaseAuth = FirebaseAuth.instance;
+      
+      switch(type) {
+        case SocialLoginType.facebook:
+          throw Failure(message: "Login por Facebook ainda não implementado. Por favor, utilize outro método");
+          // break;
+        case SocialLoginType.google:
+          socialModel = await _socialRepository.googleLogin();
+          authCredential = GoogleAuthProvider.credential(
+            accessToken: socialModel.accessToken,
+            idToken: socialModel.id,
+          );
+          break;
+      }
+      
+      final loginMethods = await firebaseAuth.fetchSignInMethodsForEmail(socialModel.email);
+      
+      final methodCheck = _getMethodToSocialLoginType(type);
+      
+      // Se o usuário está cadastrado na base, mas não contém o cadastro com o google
+      if(loginMethods.isNotEmpty && !loginMethods.contains(methodCheck)) {
+        throw Failure(message: "Login não pode ser feito por $methodCheck. Por favor, utilize outro método");
+      }
+      
+      await firebaseAuth.signInWithCredential(authCredential);
+      
+      final accessToken = await _userRepository.loginSocial(model: socialModel);
+      
+      await _saveAccessToken(accessToken: accessToken);
+      
+      await _confirmLogin();
+      
+      await _getUserData();
+    } on FirebaseAuthException catch (e, s) {
+      
+      _logger.error("Erro ao realizar login com $type", e, s);
+
+      throw Failure(message: "Erro ao realizar login");
+    }
+  }
+
+  String _getMethodToSocialLoginType(SocialLoginType type) {
     switch(type) {
       case SocialLoginType.facebook:
-        throw Exception();
-        // break;
+        return "facebook.com";
       case SocialLoginType.google:
-        socialModel = await _socialRepository.googleLogin();
-        authCredential = GoogleAuthProvider.credential(
-          accessToken: socialModel.accessToken,
-          idToken: socialModel.id,
-        );
-        break;
+        return "google.com";
     }
-
-    final loginMethods = await firebaseAuth.fetchSignInMethodsForEmail(socialModel.email);
-    
-    // Se o usuário está cadastrado na base, mas não contém o cadastro com o google
-    if(loginMethods.isNotEmpty && !loginMethods.contains("google.com")) {
-      throw Failure(message: "Login não pode ser feito com o google. Por favor, utilize outro método");
-    }
-
-    await firebaseAuth.signInWithCredential(authCredential);
   }
 }

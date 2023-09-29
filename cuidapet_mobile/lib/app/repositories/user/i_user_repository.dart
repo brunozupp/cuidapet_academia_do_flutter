@@ -1,4 +1,5 @@
 import 'package:cuidapet_mobile/app/models/confirm_login_model.dart';
+import 'package:cuidapet_mobile/app/models/social_network_model.dart';
 import 'package:cuidapet_mobile/app/models/user_model.dart';
 
 abstract class IUserRepository {
@@ -16,4 +17,8 @@ abstract class IUserRepository {
   Future<ConfirmLoginModel> confirmLogin();
 
   Future<UserModel> getUserLogged();
+
+  Future<String> loginSocial({
+    required SocialNetworkModel model,
+  });
 }

@@ -6,6 +6,7 @@ import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/i_rest_client.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/rest_client_excepiton.dart';
 import 'package:cuidapet_mobile/app/models/confirm_login_model.dart';
+import 'package:cuidapet_mobile/app/models/social_network_model.dart';
 import 'package:cuidapet_mobile/app/models/user_model.dart';
 import 'package:cuidapet_mobile/app/repositories/user/i_user_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -125,6 +126,39 @@ class UserRepository implements IUserRepository {
       _logger.error("Erro ao buscar dados do usuário logado", e, s);
 
       throw Failure(message: "Erro ao buscar dados do usuário logado");
+    }
+  }
+
+  @override
+  Future<String> loginSocial({
+    required SocialNetworkModel model,
+  }) async {
+    
+    try {
+      final result = await _restClient.unauth().post(
+        "/auth/",
+        data: {
+            'login': model.email,
+            'social_login': true,
+            'avatar': model.avatar,
+            'social_type': model.type,
+            'social_key': model.id,
+            'supplier_user': false,
+        }
+      );
+      
+      return result.data['access_token'];
+    } on RestClientExcepiton catch (e,s) {
+      if(e.statusCode == 403) {
+
+        _logger.error("Usuário inconsistente", e, s);
+
+        throw Failure(message: "Usuário inconsistente. Entre em contato com o suporte");
+      }
+
+      _logger.error("Erro ao realizar login", e, s);
+
+      throw Failure(message: "Erro ao realizar login, tente novamente mais tarde");
     }
   }
 
