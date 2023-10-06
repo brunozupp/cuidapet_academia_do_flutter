@@ -125,7 +125,7 @@ class UserService implements IUserService {
   Future<void> _saveAccessToken({
     required String accessToken,
   }) async {
-    _localSecureStorage.write(Constants.LOCAL_STORAGE_ACCESS_TOKEN_KEY, accessToken);
+    _localStorage.write(Constants.LOCAL_STORAGE_ACCESS_TOKEN_KEY, accessToken);
   }
   
   Future<void> _confirmLogin() async {

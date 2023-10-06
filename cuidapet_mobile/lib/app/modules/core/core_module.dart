@@ -17,9 +17,10 @@ class CoreModule extends Module {
       localStorage: i(),
     ), export: true), // precisa do export para exportar para outros módulos
     Bind.lazySingleton<IRestClient>((i) => DioRestClient(
-      localSecureStorage: i(),
+      localStorage: i(),
       logger: i(),
       authStore: i(),
+      localSecureStorage: i(),
     ), export: true),
     Bind.lazySingleton<IAppLogger>((i) => AppLogger(), export: true),
     Bind.lazySingleton<ILocalStorage>((i) => LocalStorage(), export: true),
