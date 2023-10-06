@@ -13,14 +13,18 @@ class _LoginRegisterButtons extends StatelessWidget {
       alignment: WrapAlignment.center,
       children: [
         CuidapetRoundedButtonWithIcon(
-          onTap: () {}, 
+          onTap: () {
+            controller.socialLogin(type: SocialLoginType.facebook);
+          }, 
           width: 0.42.sw, 
           color: const Color(0xFF4267B3), 
           icon: CuidapetIcons.facebook, 
           label: "Facebook",
         ),
         CuidapetRoundedButtonWithIcon(
-          onTap: () {}, 
+          onTap: () {
+            controller.socialLogin(type: SocialLoginType.google);
+          }, 
           width: 0.42.sw, 
           color: const Color(0xFFE15031), 
           icon: CuidapetIcons.google, 

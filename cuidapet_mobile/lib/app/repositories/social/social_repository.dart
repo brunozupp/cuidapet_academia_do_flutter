@@ -1,14 +1,36 @@
 import 'package:cuidapet_mobile/app/core/exceptions/failure.dart';
 import 'package:cuidapet_mobile/app/models/social_network_model.dart';
 import 'package:cuidapet_mobile/app/repositories/social/i_social_repository.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class SocialRepository implements ISocialRepository {
 
   @override
   Future<SocialNetworkModel> facebookLogin() async {
-    // TODO: implement facebookLogin
-    throw UnimplementedError();
+    
+    final facebookAuth = FacebookAuth.instance;
+
+    final result = await facebookAuth.login();
+
+    switch(result.status) {
+      case LoginStatus.success:
+        final userData = await facebookAuth.getUserData();
+
+        return SocialNetworkModel(
+          id: userData["id"], 
+          name: userData["name"], 
+          email: userData["email"], 
+          type: "Facebook",
+          avatar: userData["picture"]["data"]["url"], 
+          accessToken: result.accessToken?.token ?? ""
+        );
+      case LoginStatus.cancelled:
+        throw Failure(message: "Login cancelado");
+      case LoginStatus.failed:
+      case LoginStatus.operationInProgress:
+        throw Failure(message: result.message);
+    }
   }
 
   @override

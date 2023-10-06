@@ -156,8 +156,9 @@ class UserService implements IUserService {
       
       switch(type) {
         case SocialLoginType.facebook:
-          throw Failure(message: "Login por Facebook ainda não implementado. Por favor, utilize outro método");
-          // break;
+          socialModel = await _socialRepository.facebookLogin();
+          authCredential = FacebookAuthProvider.credential(socialModel.accessToken);
+          break;
         case SocialLoginType.google:
           socialModel = await _socialRepository.googleLogin();
           authCredential = GoogleAuthProvider.credential(
