@@ -1,10 +1,13 @@
+import 'package:cuidapet_mobile/app/modules/home/home_controller.dart';
 import 'package:cuidapet_mobile/app/modules/home/home_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class HomeModule extends Module {
 
   @override
-  List<Bind> get binds => [];
+  List<Bind> get binds => [
+    Bind.singleton((i) => HomeController()),
+  ];
 
   @override
   List<ModularRoute> get routes => [
