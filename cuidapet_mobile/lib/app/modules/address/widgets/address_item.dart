@@ -10,7 +10,7 @@ class _AddressItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(
         vertical: 10,
       ),
-      child: ListTile(
+      child: const ListTile(
         leading: CircleAvatar(
           radius: 30,
           backgroundColor: Colors.white,
