@@ -47,7 +47,7 @@ class _AddressPageState extends State<AddressPage> {
               ),
               _AddressSearchWidget(
                 searchResultCallback: (PlaceModel place) {
-                  
+                  Modular.to.pushNamed("/address/detail/", arguments: place);
                 },
               ),
               const SizedBox(
