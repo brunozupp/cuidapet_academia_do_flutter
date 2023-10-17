@@ -1,8 +1,15 @@
-part of '../address_page.dart';
+part of '../../address_page.dart';
+
+typedef AddressSelectedCallback = void Function(PlaceModel);
 
 class _AddressSearchWidget extends StatefulWidget {
 
-  const _AddressSearchWidget({ super.key });
+  final AddressSelectedCallback searchResultCallback;
+
+  const _AddressSearchWidget({
+    Key? key,
+    required this.searchResultCallback,
+  }) : super(key: key);
 
   @override
   State<_AddressSearchWidget> createState() => _AddressSearchWidgetState();
@@ -10,7 +17,19 @@ class _AddressSearchWidget extends StatefulWidget {
 
 class _AddressSearchWidgetState extends State<_AddressSearchWidget> {
 
-  final border = OutlineInputBorder(
+  final searchTextEC = TextEditingController();
+  final searchTextFN = FocusNode();
+
+  final controller = Modular.get<AddressSearchController>();
+
+  @override
+  void dispose() {
+    searchTextEC.dispose();
+    searchTextFN.dispose();
+    super.dispose();
+  }
+
+  final _border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
     borderSide: const BorderSide(
       style: BorderStyle.none,
@@ -32,26 +51,34 @@ class _AddressSearchWidgetState extends State<_AddressSearchWidget> {
         onSuggestionSelected: onSuggestionSelected,
         suggestionsCallback: suggestionsCallback,
         textFieldConfiguration: TextFieldConfiguration(
+          controller: searchTextEC,
+          focusNode: searchTextFN,
           decoration: InputDecoration(
             prefixIcon: const Icon(
               Icons.location_on,
             ),
             hintText: "Insira um endereço",
-            border: border,
-            disabledBorder: border,
-            enabledBorder: border,
+            border: _border,
+            disabledBorder: _border,
+            enabledBorder: _border,
           ),
         ),
       ),
     );
   }
 
-  FutureOr<Iterable<PlaceModel>> suggestionsCallback(String pattern) {
+  Future<List<PlaceModel>> suggestionsCallback(String pattern) async {
+
+    if(pattern.isNotEmpty) {
+      return await controller.searchAddress(pattern);
+    }
+
     return [];
   }
 
   void onSuggestionSelected(PlaceModel suggestion) {
-  
+    searchTextEC.text = suggestion.address;
+    widget.searchResultCallback(suggestion);
   }
 }
 
