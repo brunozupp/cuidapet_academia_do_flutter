@@ -37,7 +37,4 @@ class AddressService implements IAddressService {
       id: () => addressId,
     );
   }
-
-
-  
 }
