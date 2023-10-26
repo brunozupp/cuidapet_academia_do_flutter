@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'package:cuidapet_mobile/app/core/life_cycle/page_life_cycle_state.dart';
 import 'package:cuidapet_mobile/app/core/ui/extensions/theme_extension.dart';
 import 'package:cuidapet_mobile/app/models/place_model.dart';
+import 'package:cuidapet_mobile/app/modules/address/address_controller.dart';
 import 'package:cuidapet_mobile/app/modules/address/widgets/address_search_widget/address_search_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 part 'widgets/address_item.dart';
 part 'widgets/address_search_widget/address_search_widget.dart';
@@ -17,7 +20,7 @@ class AddressPage extends StatefulWidget {
   State<AddressPage> createState() => _AddressPageState();
 }
 
-class _AddressPageState extends State<AddressPage> {
+class _AddressPageState extends PageLifeCycleState<AddressController, AddressPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -75,15 +78,12 @@ class _AddressPageState extends State<AddressPage> {
               const SizedBox(
                 height: 20,
               ),
-              const Column(
-                children: [
-                  _AddressItem(),
-                  _AddressItem(),
-                  _AddressItem(),
-                  _AddressItem(),
-                  _AddressItem(),
-                  _AddressItem(),
-                ],
+              Observer(
+                builder: (context) {
+                  return Column(
+                    children: controller.addresses.map((e) => _ItemTile(address: e.address)).toList(),
+                  );
+                }
               ),
             ],
           ),

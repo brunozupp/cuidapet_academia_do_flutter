@@ -32,8 +32,8 @@ class AddressEntity {
     return AddressEntity(
       id: map['id']?.toInt(),
       address: map['address'] ?? '',
-      lat: map['lat']?.toDouble() ?? 0.0,
-      lng: map['lng']?.toDouble() ?? 0.0,
+      lat: double.tryParse(map['lat']) ?? 0.0,
+      lng: double.tryParse(map['lng']) ?? 0.0,
       additional: map['additional'] ?? '',
     );
   }
