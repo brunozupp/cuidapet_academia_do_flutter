@@ -59,6 +59,10 @@ dependencies:
   flutter_typeahead: ^4.8.0
   google_maps_flutter: ^2.5.0
 
+  sqflite: ^2.3.0
+  synchronized: ^3.1.0
+  path: ^1.8.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

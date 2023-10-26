@@ -1,3 +1,4 @@
+import 'package:cuidapet_mobile/app/core/database/sqlite_connection_factory.dart';
 import 'package:cuidapet_mobile/app/core/local_storage/local_secure_storage/i_local_secure_storage.dart';
 import 'package:cuidapet_mobile/app/core/local_storage/local_secure_storage/local_secure_storage.dart';
 import 'package:cuidapet_mobile/app/core/local_storage/local_storage/i_local_storage.dart';
@@ -34,5 +35,6 @@ class CoreModule extends Module {
       logger: i(),
     ), export: true),
     Bind.lazySingleton<IAddressService>((i) => AddressService(addressRepository: i()), export: true),
+    Bind.lazySingleton((i) => SqliteConnectionFactory(), export: true), // precisa do export para exportar para outros módulos
   ];
 }
