@@ -1,3 +1,5 @@
+import 'package:cuidapet_mobile/app/core/database/sqlite_connection_factory.dart';
+import 'package:cuidapet_mobile/app/core/entities/address_entity.dart';
 import 'package:cuidapet_mobile/app/core/exceptions/failure.dart';
 import 'package:cuidapet_mobile/app/core/helpers/constants.dart';
 import 'package:cuidapet_mobile/app/core/helpers/environments.dart';
@@ -11,12 +13,15 @@ class AddressRepository implements IAddressRepository {
 
   final IRestClient _restClient;
   final IAppLogger _logger;
+  final SqliteConnectionFactory _sqliteConnectionFactory;
 
   AddressRepository({
     required IRestClient restClient,
     required IAppLogger logger,
+    required SqliteConnectionFactory sqliteConnectionFactory,
   }) : _restClient = restClient,
-       _logger = logger;
+       _logger = logger,
+       _sqliteConnectionFactory = sqliteConnectionFactory;
   
   @override
   Future<List<PlaceModel>> findAddressByGooglePlaces(String addressPattern) async {
@@ -58,6 +63,32 @@ class AddressRepository implements IAddressRepository {
     } on Failure {
       rethrow;
     }
+  }
+
+  @override
+  Future<void> deleteAll() async {
+    final connection = await _sqliteConnectionFactory.openConnection();
+
+    await connection.delete("addresses");
+  }
+
+  @override
+  Future<List<AddressEntity>> getAddress() async {
+    final connection = await _sqliteConnectionFactory.openConnection();
+
+    final result = await connection.rawQuery("SELECT * FROM addresses");
+
+    return result.map<AddressEntity>((e) => AddressEntity.fromMap(e)).toList();
+  }
+
+  @override
+  Future<int> saveAddress(AddressEntity entity) async {
+    final connection = await _sqliteConnectionFactory.openConnection();
+
+    return await connection.rawInsert(
+      "INSERT INTO addresses VALUES(?,?,?,?,?)",
+      [null,entity.address,entity.lat,entity.lng,entity.additional],
+    );
   }
   
 }
