@@ -1,7 +1,11 @@
 import 'package:cuidapet_mobile/app/core/entities/address_entity.dart';
 import 'package:cuidapet_mobile/app/core/life_cycle/controller_life_cycle.dart';
 import 'package:cuidapet_mobile/app/core/ui/widgets/cuidapet_loader.dart';
+import 'package:cuidapet_mobile/app/models/place_model.dart';
 import 'package:cuidapet_mobile/app/services/address/i_address_service.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mobx/mobx.dart';
 
 part 'address_controller.g.dart';
@@ -14,6 +18,12 @@ abstract class AddressControllerBase with Store, ControllerLifeCycle {
 
   @readonly
   List<AddressEntity> _addresses = [];
+
+  @readonly
+  bool _locationServiceUnavailable = false;
+
+  @readonly
+  LocationPermission? _locationPermission;
 
   AddressControllerBase({
     required IAddressService addressService,
@@ -31,5 +41,62 @@ abstract class AddressControllerBase with Store, ControllerLifeCycle {
     _addresses = await _addressService.getAddress();
 
     CuidapetLoader.hide();
+  }
+
+  @action
+  Future<void> myLocation() async {
+    
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if(!serviceEnabled) {
+      _locationServiceUnavailable = true;
+      return;
+    }
+
+    final locationPermission = await Geolocator.checkPermission();
+
+    switch(locationPermission) {
+      case LocationPermission.denied:
+        final permission = await Geolocator.requestPermission();
+
+        if(permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+          _locationPermission = permission;
+          return;
+        }
+        break;
+      case LocationPermission.deniedForever:
+        _locationPermission = locationPermission;
+        return;
+      case LocationPermission.whileInUse:
+      case LocationPermission.always:
+      case LocationPermission.unableToDetermine:
+        break;
+    }
+
+    CuidapetLoader.show();
+
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    final placemark = await placemarkFromCoordinates(position.latitude, position.longitude);
+
+    final place = placemark.first;
+
+    final address = "${place.thoroughfare} ${place.subThoroughfare}";
+
+    final placeModel = PlaceModel(
+      address: address, 
+      lat: position.latitude, 
+      lng: position.longitude,
+    );
+
+    CuidapetLoader.hide();
+
+    goToAddressDetail(placeModel);
+  }
+
+  void goToAddressDetail(PlaceModel place) {
+    Modular.to.pushNamed("/address/detail/", arguments: place);
   }
 }
