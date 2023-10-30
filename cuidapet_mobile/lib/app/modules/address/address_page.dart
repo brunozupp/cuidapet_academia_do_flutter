@@ -31,19 +31,19 @@ class _AddressPageState extends PageLifeCycleState<AddressController, AddressPag
   void initState() {
     super.initState();
 
-    final reactionService = reaction<Observable<bool>>((p0) => controller.locationServiceUnavailable, (locationServiceUnavailable) { 
+    final reactionService = reaction<bool>((p0) => controller.locationServiceUnavailable, (locationServiceUnavailable) { 
 
-      if(locationServiceUnavailable.value) {
+      if(locationServiceUnavailable) {
         showDialogLocationServiceUnavailable();
       }
     });
 
-    final reactionLocationPermition = reaction<Observable<LocationPermission>?>((p0) => controller.locationPermission, (locationPermission) { 
-      if(locationPermission != null && locationPermission.value == LocationPermission.denied) {
+    final reactionLocationPermition = reaction<LocationPermission?>((p0) => controller.locationPermission, (locationPermission) { 
+      if(locationPermission != null && locationPermission == LocationPermission.denied) {
         showDialogLocationDenied(() { 
           controller.myLocation();
         });
-      } else if(locationPermission != null && locationPermission.value == LocationPermission.deniedForever) {
+      } else if(locationPermission != null && locationPermission == LocationPermission.deniedForever) {
         showDialogLocationDeniedForever();
       }
     });
