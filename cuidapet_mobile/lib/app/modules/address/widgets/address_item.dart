@@ -2,16 +2,26 @@ part of '../address_page.dart';
 
 class _AddressItem extends StatelessWidget {
 
-  const _AddressItem({ Key? key }) : super(key: key);
+  final String address;
+  final String additional;
+  final VoidCallback onTap;
 
-   @override
-   Widget build(BuildContext context) {
+  const _AddressItem({
+    Key? key,
+    required this.address,
+    required this.additional,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(
         vertical: 10,
       ),
-      child: const ListTile(
-        leading: CircleAvatar(
+      child: ListTile(
+        onTap: onTap,
+        leading: const CircleAvatar(
           radius: 30,
           backgroundColor: Colors.white,
           child: Icon(
@@ -20,10 +30,10 @@ class _AddressItem extends StatelessWidget {
           ),
         ),
         title: Text(
-          "Av. Paulista, 200",
+          address,
         ),
         subtitle: Text(
-          "Complemento X"
+          additional,
         ),
       ),
     );

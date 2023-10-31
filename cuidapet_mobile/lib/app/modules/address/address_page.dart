@@ -135,8 +135,9 @@ class _AddressPageState
               Observer(builder: (context) {
                 return Column(
                   children: controller.addresses
-                      .map((e) => _ItemTile(
+                      .map((e) => _AddressItem(
                         address: e.address,
+                        additional: e.additional,
                         onTap: () {
                           controller.selectAddress(e);
                         },
