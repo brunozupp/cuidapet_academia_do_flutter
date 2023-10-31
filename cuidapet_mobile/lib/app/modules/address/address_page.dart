@@ -16,34 +16,38 @@ part 'widgets/address_item.dart';
 part 'widgets/address_search_widget/address_search_widget.dart';
 
 class AddressPage extends StatefulWidget {
-
-  const AddressPage({ Key? key }) : super(key: key);
+  const AddressPage({Key? key}) : super(key: key);
 
   @override
   State<AddressPage> createState() => _AddressPageState();
 }
 
-class _AddressPageState extends PageLifeCycleState<AddressController, AddressPage> with LocationMixin {
-
+class _AddressPageState
+    extends PageLifeCycleState<AddressController, AddressPage>
+    with LocationMixin {
   late final reactionDisposers = <ReactionDisposer>[];
 
   @override
   void initState() {
     super.initState();
 
-    final reactionService = reaction<bool>((p0) => controller.locationServiceUnavailable, (locationServiceUnavailable) { 
-
-      if(locationServiceUnavailable) {
+    final reactionService =
+        reaction<bool>((p0) => controller.locationServiceUnavailable,
+            (locationServiceUnavailable) {
+      if (locationServiceUnavailable) {
         showDialogLocationServiceUnavailable();
       }
     });
 
-    final reactionLocationPermition = reaction<LocationPermission?>((p0) => controller.locationPermission, (locationPermission) { 
-      if(locationPermission != null && locationPermission == LocationPermission.denied) {
-        showDialogLocationDenied(() { 
+    final reactionLocationPermition = reaction<LocationPermission?>(
+        (p0) => controller.locationPermission, (locationPermission) {
+      if (locationPermission != null &&
+          locationPermission == LocationPermission.denied) {
+        showDialogLocationDenied(() {
           controller.myLocation();
         });
-      } else if(locationPermission != null && locationPermission == LocationPermission.deniedForever) {
+      } else if (locationPermission != null &&
+          locationPermission == LocationPermission.deniedForever) {
         showDialogLocationDeniedForever();
       }
     });
@@ -56,15 +60,12 @@ class _AddressPageState extends PageLifeCycleState<AddressController, AddressPag
 
   @override
   void dispose() {
-    
     for (var reactionDisposer in reactionDisposers) {
       reactionDisposer();
     }
 
     super.dispose();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -92,9 +93,15 @@ class _AddressPageState extends PageLifeCycleState<AddressController, AddressPag
               const SizedBox(
                 height: 20,
               ),
-              _AddressSearchWidget(
-                searchResultCallback: (PlaceModel place) {
-                  controller.goToAddressDetail(place);
+              Observer(
+                builder: (context) {
+                  return _AddressSearchWidget(
+                    key: UniqueKey(), // Usando UniqueKey para o flutter sempre reconstruir esse cara
+                    searchResultCallback: (PlaceModel place) {
+                      controller.goToAddressDetail(place);
+                    },
+                    place: controller.placeModel,
+                  );
                 },
               ),
               const SizedBox(
@@ -125,17 +132,20 @@ class _AddressPageState extends PageLifeCycleState<AddressController, AddressPag
               const SizedBox(
                 height: 20,
               ),
-              Observer(
-                builder: (context) {
-                  return Column(
-                    children: controller.addresses.map((e) => _ItemTile(address: e.address)).toList(),
-                  );
-                }
-              ),
+              Observer(builder: (context) {
+                return Column(
+                  children: controller.addresses
+                      .map((e) => _ItemTile(address: e.address))
+                      .toList(),
+                );
+              }),
             ],
           ),
         ),
       ),
     );
   }
+
+  @override
+  List<Object?> get props => [reactionDisposers];
 }
