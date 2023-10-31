@@ -22,8 +22,8 @@ class AddressEntity {
     return {
       'id': id,
       'address': address,
-      'lat': lat,
-      'lng': lng,
+      'lat': lat.toString(),
+      'lng': lng.toString(),
       'additional': additional,
     };
   }

@@ -135,7 +135,12 @@ class _AddressPageState
               Observer(builder: (context) {
                 return Column(
                   children: controller.addresses
-                      .map((e) => _ItemTile(address: e.address))
+                      .map((e) => _ItemTile(
+                        address: e.address,
+                        onTap: () {
+                          controller.selectAddress(e);
+                        },
+                      ))
                       .toList(),
                 );
               }),
@@ -145,7 +150,4 @@ class _AddressPageState
       ),
     );
   }
-
-  @override
-  List<Object?> get props => [reactionDisposers];
 }
