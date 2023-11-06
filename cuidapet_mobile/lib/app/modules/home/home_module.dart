@@ -9,6 +9,7 @@ class HomeModule extends Module {
   List<Bind> get binds => [
     Bind.singleton((i) => HomeController(
       addressService: i(),
+      supplierService: i(),
     )),
   ];
 
