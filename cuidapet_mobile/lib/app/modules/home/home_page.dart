@@ -8,6 +8,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 
 part 'widgets/home_address_widget.dart';
 part 'widgets/home_categories_widget.dart';
+part 'widgets/home_supplier_tab.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -40,7 +41,9 @@ class _HomePageState extends PageLifeCycleState<HomeController, HomePage> {
             ),
           ];
         }, 
-        body: Container(),
+        body: _HomeSupplierTab(
+          controller: controller,
+        ),
       ),
     );
   }
