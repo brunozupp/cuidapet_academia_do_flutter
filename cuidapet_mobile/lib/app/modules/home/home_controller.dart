@@ -3,6 +3,7 @@ import 'package:cuidapet_mobile/app/core/life_cycle/controller_life_cycle.dart';
 import 'package:cuidapet_mobile/app/core/ui/widgets/cuidapet_loader.dart';
 import 'package:cuidapet_mobile/app/core/ui/widgets/cuidapet_messages.dart';
 import 'package:cuidapet_mobile/app/models/supplier_category_model.dart';
+import 'package:cuidapet_mobile/app/models/supplier_nearby_me_model.dart';
 import 'package:cuidapet_mobile/app/services/address/i_address_service.dart';
 import 'package:cuidapet_mobile/app/services/supplier/i_supplier_service.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -33,6 +34,19 @@ abstract class HomeControllerBase with Store, ControllerLifeCycle {
   @readonly
   var _supplierPageTypeSelected = SupplierPageType.list;
 
+  @readonly
+  var _listSuppliersByAddress = <SupplierNearbyMeModel>[];
+
+  late ReactionDisposer findSuppliersReactionDisposer;
+
+  @override
+  void onInit([Map<String, dynamic>? params]) {
+    // Quando houver qualquer alteração na variável de endereço, vai chamar o método findSupplierByAddress
+    findSuppliersReactionDisposer = reaction((_) => _addressEntity, (address) { 
+      findSupplierByAddress();
+    });
+  }
+
   @override
   Future<void> onReady() async {
     
@@ -45,6 +59,11 @@ abstract class HomeControllerBase with Store, ControllerLifeCycle {
     } finally {
       CuidapetLoader.hide();
     }
+  }
+
+  @override
+  void dispose() {
+    findSuppliersReactionDisposer();
   }
 
   @action
@@ -82,5 +101,16 @@ abstract class HomeControllerBase with Store, ControllerLifeCycle {
   @action
   void changeTabSupplier(SupplierPageType supplierPageType) {
     _supplierPageTypeSelected = supplierPageType;
+  }
+
+  @action
+  Future<void> findSupplierByAddress() async {
+    if(_addressEntity != null) {
+      final suppliers = await _supplierService.findNearby(_addressEntity!);
+    
+      _listSuppliersByAddress = [...suppliers];
+    } else {
+      CuidapetMessages.alert("Para realizar a busca de petshops você precisa selecionar um endereço");
+    }
   }
 }

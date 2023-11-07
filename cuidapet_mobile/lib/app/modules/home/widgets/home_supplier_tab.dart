@@ -19,7 +19,7 @@ class _HomeSupplierTab extends StatelessWidget {
                   milliseconds: 400,
                 ),
                 child: controller.supplierPageTypeSelected == SupplierPageType.list
-                  ? const _HomeSupplierList()
+                  ? _HomeSupplierList(controller: controller)
                   : const _HomeSupplierGrid(),
               );
             }
@@ -77,19 +77,27 @@ class _HomeTabHeader extends StatelessWidget {
 }
 
 class _HomeSupplierList extends StatelessWidget {
-  const _HomeSupplierList({super.key});
+
+  final HomeController controller;
+
+  const _HomeSupplierList({required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              return const _HomeSupplierListItemWidget();
-            },
-            childCount: 10
-          ),
+        Observer(
+          builder: (context) {
+            return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final supplier = controller.listSuppliersByAddress[index];
+                  return _HomeSupplierListItemWidget(supplier: supplier);
+                },
+                childCount: controller.listSuppliersByAddress.length,
+              ),
+            );
+          }
         ),
       ],
     );
@@ -97,7 +105,10 @@ class _HomeSupplierList extends StatelessWidget {
 }
 
 class _HomeSupplierListItemWidget extends StatelessWidget {
-  const _HomeSupplierListItemWidget({super.key});
+
+  final SupplierNearbyMeModel supplier;
+
+  const _HomeSupplierListItemWidget({required this.supplier});
 
   @override
   Widget build(BuildContext context) {
@@ -121,23 +132,23 @@ class _HomeSupplierListItemWidget extends StatelessWidget {
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.only(left: 50),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Clinica central Abc",
+                        Text(supplier.name,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.location_on,
                               size: 16,
                             ),
-                            Text("1.34 km de distância")
+                            Text("${supplier.distance.toStringAsFixed(2)} km de distância")
                           ],
                         ),
                       ],
@@ -181,9 +192,9 @@ class _HomeSupplierListItemWidget extends StatelessWidget {
                 ),
                 color: Colors.grey,
                 borderRadius: BorderRadius.circular(100),
-                image: const DecorationImage(
+                image: DecorationImage(
                   image: NetworkImage(
-                    "https://conteudo.imguol.com.br/c/entretenimento/eb/2022/03/23/cachorro-da-raca-lulu-da-pomeramia-1648065976007_v2_900x506.jpg",
+                    supplier.logo,
                   ),
                   fit: BoxFit.contain,
                 )
