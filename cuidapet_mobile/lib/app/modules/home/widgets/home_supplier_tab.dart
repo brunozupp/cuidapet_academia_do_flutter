@@ -211,7 +211,7 @@ class _HomeSupplierGrid extends StatelessWidget {
   
   final HomeController controller;
 
-    _HomeSupplierGrid({
+    const _HomeSupplierGrid({
     required this.controller
   });
 

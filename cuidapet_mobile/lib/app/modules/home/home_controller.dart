@@ -37,6 +37,11 @@ abstract class HomeControllerBase with Store, ControllerLifeCycle {
   @readonly
   var _listSuppliersByAddress = <SupplierNearbyMeModel>[];
 
+  var _listSuppliersByAddressCache = <SupplierNearbyMeModel>[];
+
+  @readonly
+  SupplierCategoryModel? _supplierCategoryFilterSelected;
+
   late ReactionDisposer findSuppliersReactionDisposer;
 
   @override
@@ -109,8 +114,35 @@ abstract class HomeControllerBase with Store, ControllerLifeCycle {
       final suppliers = await _supplierService.findNearby(_addressEntity!);
     
       _listSuppliersByAddress = [...suppliers];
+      _listSuppliersByAddressCache = [...suppliers];
+
+      filterSupplier();
     } else {
       CuidapetMessages.alert("Para realizar a busca de petshops você precisa selecionar um endereço");
     }
+  }
+
+  @action
+  void filterSupplierCategory(SupplierCategoryModel category) {
+
+    if(_supplierCategoryFilterSelected == category) {
+      _supplierCategoryFilterSelected = null;
+    } else {
+      _supplierCategoryFilterSelected = category;
+    }
+
+    filterSupplier();
+  }
+
+  @action
+  void filterSupplier() {
+
+    var suppliers = [..._listSuppliersByAddressCache];
+
+    if(_supplierCategoryFilterSelected != null) {
+      suppliers = suppliers.where((e) => e.category == _supplierCategoryFilterSelected!.id).toList();
+    }
+
+    _listSuppliersByAddress = [...suppliers];
   }
 }
