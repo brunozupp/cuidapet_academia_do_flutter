@@ -1,3 +1,4 @@
+import 'package:cuidapet_mobile/app/core/helpers/debouncer.dart';
 import 'package:cuidapet_mobile/app/core/ui/extensions/size_screen_extension.dart';
 import 'package:cuidapet_mobile/app/core/ui/extensions/theme_extension.dart';
 import 'package:cuidapet_mobile/app/modules/home/home_controller.dart';
@@ -24,8 +25,9 @@ class HomeAppbar extends SliverAppBar {
 
 class _CuidapetAppBar extends StatelessWidget {
   final HomeController controller;
+  final _debouncer = Debouncer(milliseconds: 500);
   
-  const _CuidapetAppBar({
+  _CuidapetAppBar({
     required this.controller,
   });
 
@@ -74,10 +76,15 @@ class _CuidapetAppBar extends StatelessWidget {
                 elevation: 4,
                 borderRadius: BorderRadius.circular(30),
                 child: TextFormField(
+                  onChanged: (value) {
+                    _debouncer.run(() { 
+                      controller.filterSupplierByName(value);
+                    });
+                  },
                   decoration: InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
-                    suffixIcon: Icon(
+                    suffixIcon: const Icon(
                       Icons.search,
                       size: 25,
                       color: Colors.grey,

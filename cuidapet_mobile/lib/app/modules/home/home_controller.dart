@@ -39,6 +39,8 @@ abstract class HomeControllerBase with Store, ControllerLifeCycle {
 
   var _listSuppliersByAddressCache = <SupplierNearbyMeModel>[];
 
+  var _nameSearchText = "";
+
   @readonly
   SupplierCategoryModel? _supplierCategoryFilterSelected;
 
@@ -134,6 +136,12 @@ abstract class HomeControllerBase with Store, ControllerLifeCycle {
     filterSupplier();
   }
 
+  void filterSupplierByName(String name) {
+    _nameSearchText = name;
+
+    filterSupplier();
+  }
+
   @action
   void filterSupplier() {
 
@@ -141,6 +149,10 @@ abstract class HomeControllerBase with Store, ControllerLifeCycle {
 
     if(_supplierCategoryFilterSelected != null) {
       suppliers = suppliers.where((e) => e.category == _supplierCategoryFilterSelected!.id).toList();
+    }
+
+    if(_nameSearchText.isNotEmpty) {
+      suppliers = suppliers.where((e) => e.name.toUpperCase().contains(_nameSearchText.toUpperCase())).toList();
     }
 
     _listSuppliersByAddress = [...suppliers];
