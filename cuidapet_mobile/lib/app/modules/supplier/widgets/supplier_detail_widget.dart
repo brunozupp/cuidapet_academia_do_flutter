@@ -1,8 +1,12 @@
 import 'package:cuidapet_mobile/app/core/ui/extensions/theme_extension.dart';
+import 'package:cuidapet_mobile/app/models/supplier_model.dart';
 import 'package:flutter/material.dart';
 
 class SupplierDetailWidget extends StatelessWidget {
-  const SupplierDetailWidget({super.key});
+
+  final SupplierModel supplier;
+
+  const SupplierDetailWidget({super.key, required this.supplier});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +20,7 @@ class SupplierDetailWidget extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              "Clinica Central ABC",
+              supplier.name,
               style: context.textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
@@ -37,19 +41,19 @@ class SupplierDetailWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        const ListTile(
-          leading: Icon(
+        ListTile(
+          leading: const Icon(
             Icons.location_city,
             color: Colors.black,
           ),
-          title: Text("Avenida paulista 2000"),
+          title: Text(supplier.address),
         ),
-        const ListTile(
-          leading: Icon(
+        ListTile(
+          leading: const Icon(
             Icons.local_phone,
             color: Colors.black,
           ),
-          title: Text("17885478963"),
+          title: Text(supplier.phone),
         ),
         Divider(
           thickness: 1,
