@@ -1,19 +1,30 @@
+import 'package:cuidapet_mobile/app/core/life_cycle/page_life_cycle_state.dart';
 import 'package:cuidapet_mobile/app/core/ui/extensions/theme_extension.dart';
+import 'package:cuidapet_mobile/app/modules/supplier/supplier_controller.dart';
 import 'package:cuidapet_mobile/app/modules/supplier/widgets/supplier_detail_widget.dart';
 import 'package:cuidapet_mobile/app/modules/supplier/widgets/supplier_service_widget.dart';
 import 'package:flutter/material.dart';
 
 class SupplierPage extends StatefulWidget {
-  const SupplierPage({super.key});
+
+  final int _supplierId;
+
+  const SupplierPage({
+    super.key,
+    required int supplierId,
+  }) : _supplierId = supplierId;
 
   @override
   State<SupplierPage> createState() => _SupplierPageState();
 }
 
-class _SupplierPageState extends State<SupplierPage> {
+class _SupplierPageState extends PageLifeCycleState<SupplierController, SupplierPage> {
 
   late ScrollController _scrollController;
   final ValueNotifier<bool> sliverCollapsedVN = ValueNotifier(false);
+
+  @override
+  Map<String, dynamic>? get params => {'supplierId': widget._supplierId};
 
   void _listenerCollapsedAppBarTitle() {
     if(_scrollController.offset > 180 && !_scrollController.position.outOfRange) {
