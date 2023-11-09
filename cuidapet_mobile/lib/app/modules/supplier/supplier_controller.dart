@@ -29,6 +29,10 @@ abstract class SupplierControllerBase with Store, ControllerLifeCycle {
   @readonly
   var _supplierServices = <SupplierServicesModel>[];
 
+  @readonly
+  // ignore: prefer_final_fields
+  var _servicesSelected = <SupplierServicesModel>[].asObservable();
+
   @override
   void onInit([Map<String, dynamic>? params]) {
     if(params != null && params.containsKey("supplierId")) {
@@ -79,4 +83,18 @@ abstract class SupplierControllerBase with Store, ControllerLifeCycle {
       CuidapetMessages.alert(errorMessage);
     }
   }
+
+  @action
+  void addOrRemoveService(SupplierServicesModel supplierServicesModel) {
+    if(_servicesSelected.contains(supplierServicesModel)) {
+      _servicesSelected.remove(supplierServicesModel);
+    } else {
+      _servicesSelected.add(supplierServicesModel);
+    }
+  }
+
+  bool isServiceSelected(SupplierServicesModel service) => _servicesSelected.contains(service);
+
+  @computed
+  int get totalServicesSelected => _servicesSelected.length;
 }

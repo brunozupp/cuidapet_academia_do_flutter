@@ -56,13 +56,21 @@ class _SupplierPageState extends PageLifeCycleState<SupplierController, Supplier
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: const Text("Fazer agendamento"),
-        icon: const Icon(
-          Icons.schedule,
-        ),
-        backgroundColor: context.primaryColor,
+      floatingActionButton: Observer(
+        builder: (context) {
+          return AnimatedOpacity(
+            opacity: controller.servicesSelected.isNotEmpty ? 1 : 0,
+            duration: const Duration(milliseconds: 300),
+            child: FloatingActionButton.extended(
+              onPressed: () {},
+              label: const Text("Fazer agendamento"),
+              icon: const Icon(
+                Icons.schedule,
+              ),
+              backgroundColor: context.primaryColor,
+            ),
+          );
+        }
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Observer(
@@ -106,10 +114,10 @@ class _SupplierPageState extends PageLifeCycleState<SupplierController, Supplier
               SliverToBoxAdapter(
                 child: SupplierDetailWidget(supplier: supplier),
               ),
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: Text(
-                  "Serviços (0 selecionados)",
-                  style: TextStyle(
+                  "Serviços (${controller.totalServicesSelected} selecionado${controller.totalServicesSelected <= 1 ? '' : 's'})",
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
                   ),
@@ -118,6 +126,7 @@ class _SupplierPageState extends PageLifeCycleState<SupplierController, Supplier
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => SupplierServiceWidget(
+                    controller: controller,
                     service: controller.supplierServices[index],
                   ),
                   childCount: controller.supplierServices.length
