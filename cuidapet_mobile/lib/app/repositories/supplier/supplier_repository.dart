@@ -4,7 +4,9 @@ import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/i_rest_client.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/rest_client_excepiton.dart';
 import 'package:cuidapet_mobile/app/models/supplier_category_model.dart';
+import 'package:cuidapet_mobile/app/models/supplier_model.dart';
 import 'package:cuidapet_mobile/app/models/supplier_nearby_me_model.dart';
+import 'package:cuidapet_mobile/app/models/supplier_services_model.dart';
 import 'package:cuidapet_mobile/app/repositories/supplier/i_supplier_repository.dart';
 
 class SupplierRepository implements ISupplierRepository {
@@ -55,6 +57,43 @@ class SupplierRepository implements ISupplierRepository {
       const errorMessage = "Erro ao buscar fornecedores perto de mim";
 
       _logger.error(errorMessage, e, s);
+
+      throw Failure(message: errorMessage);
+    }
+  }
+
+  @override
+  Future<SupplierModel> findById(int id) async {
+    
+    try {
+      final result = await _restClient.auth().get(
+        "/suppliers/$id",
+      );
+      
+      return SupplierModel.fromMap(result.data);
+    } on RestClientExcepiton catch (e, s) {
+
+      const errorMessage = "Erro ao buscar dados do fornecedor por id";
+
+      _logger.error(errorMessage,e,s);
+
+      throw Failure(message: errorMessage);
+    }
+  }
+
+  @override
+  Future<List<SupplierServicesModel>> findServices(int supplierId) async {
+    
+    try {
+      final result = await _restClient.auth().get(
+        "/suppliers/$supplierId/services",
+      );
+      
+      return result.data?.map<SupplierServicesModel>((e) => SupplierServicesModel.fromMap(e)).toList() ?? <SupplierServicesModel>[];
+    } on RestClientExcepiton catch (e, s) {
+      const errorMessage = "Erro ao buscar serviços do fornecedor";
+
+      _logger.error(errorMessage,e,s);
 
       throw Failure(message: errorMessage);
     }
