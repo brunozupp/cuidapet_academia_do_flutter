@@ -13,7 +13,15 @@ class SupplierPage extends StatefulWidget {
 class _SupplierPageState extends State<SupplierPage> {
 
   late ScrollController _scrollController;
-  bool sliverCollapsed = false;
+  final ValueNotifier<bool> sliverCollapsedVN = ValueNotifier(false);
+
+  void _listenerCollapsedAppBarTitle() {
+    if(_scrollController.offset > 180 && !_scrollController.position.outOfRange) {
+      sliverCollapsedVN.value = true;
+    } else if(_scrollController.offset <= 180 && !_scrollController.position.outOfRange) {
+      sliverCollapsedVN.value = false;
+    }
+  }
 
   @override
   void initState() {
@@ -23,17 +31,14 @@ class _SupplierPageState extends State<SupplierPage> {
 
     // Listener responsável pela lógica de aparecer/desaparecer com o título
     // em cima do appbar (quando fazer a rolagem para baixo e sumir a imagem de background)
-    _scrollController.addListener(() { 
-      if(_scrollController.offset > 180 && !_scrollController.position.outOfRange) {
-        setState(() {
-          sliverCollapsed = true;
-        });
-      } else if(_scrollController.offset <= 180 && !_scrollController.position.outOfRange) {
-        setState(() {
-          sliverCollapsed = false;
-        });
-      }
-    });
+    _scrollController.addListener(_listenerCollapsedAppBarTitle);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_listenerCollapsedAppBarTitle);
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -54,11 +59,16 @@ class _SupplierPageState extends State<SupplierPage> {
           SliverAppBar(
             expandedHeight: 200,
             pinned: true,
-            title: Visibility(
-              visible: sliverCollapsed,
-              child: const Text(
-                "Clinica Central ABC",
-              ),
+            title: ValueListenableBuilder<bool>( // Usou essa técnica para evitar muitas chamadas de update (setState) ao método build como um todo, assim tendo um ganho grande em performance
+              valueListenable: sliverCollapsedVN,
+              builder: (context, value, child) {
+                return Visibility(
+                  visible: value,
+                  child: const Text(
+                    "Clinica Central ABC",
+                  ),
+                );
+              }
             ),
             flexibleSpace: FlexibleSpaceBar(
               stretchModes: const [ // O que acontece quando começo o scroll e vai diminuindo a imagem
