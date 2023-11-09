@@ -4,6 +4,7 @@ import 'package:cuidapet_mobile/app/core/local_storage/local_secure_storage/i_lo
 import 'package:cuidapet_mobile/app/core/local_storage/local_storage/i_local_storage.dart';
 import 'package:cuidapet_mobile/app/core/logger/i_app_logger.dart';
 import 'package:cuidapet_mobile/app/core/rest_client/i_rest_client.dart';
+import 'package:cuidapet_mobile/app/core/rest_client/rest_client_excepiton.dart';
 import 'package:cuidapet_mobile/app/modules/core/auth/auth_store.dart';
 import 'package:dio/dio.dart';
 
@@ -73,25 +74,30 @@ class AuthRefreshTokenInterceptor extends Interceptor {
   
   Future<void> _refreshToken(DioError err) async {
 
-    final refreshToken = await _localSecureStorage.read(Constants.LOCAL_STORAGE_REFRESH_TOKEN_KEY);
-
-    if(refreshToken == null) {
+    try {
+      final refreshToken = await _localSecureStorage.read(Constants.LOCAL_STORAGE_REFRESH_TOKEN_KEY);
+      
+      if(refreshToken == null) {
+        throw ExpireTokenException();
+      }
+      
+      final resultRefresh = await _restClient.auth().put("/auth/refresh", data: {
+        'refresh_token': refreshToken,
+      });
+      
+      await _localStorage.write<String>(
+        Constants.LOCAL_STORAGE_ACCESS_TOKEN_KEY, 
+        resultRefresh.data["access_token"],
+      );
+      
+      await _localSecureStorage.write(
+        Constants.LOCAL_STORAGE_REFRESH_TOKEN_KEY, 
+        resultRefresh.data["refresh_token"],
+      );
+    } on RestClientExcepiton catch(e, s) {
+      _logger.error("Erro ao tentar fazer o refresh token", e, s);
       throw ExpireTokenException();
     }
-
-    final resultRefresh = await _restClient.auth().put("/auth/refresh", data: {
-      'refresh_token': refreshToken,
-    });
-
-    await _localStorage.write<String>(
-      Constants.LOCAL_STORAGE_ACCESS_TOKEN_KEY, 
-      resultRefresh.data["access_token"],
-    );
-
-    await _localSecureStorage.write(
-      Constants.LOCAL_STORAGE_REFRESH_TOKEN_KEY, 
-      resultRefresh.data["refresh_token"],
-    );
   }
   
   Future<void> _retryRequest(DioError err, ErrorInterceptorHandler handler) async {
