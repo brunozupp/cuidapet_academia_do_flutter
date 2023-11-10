@@ -48,6 +48,7 @@ dependencies:
   validatorless: ^1.2.3
   google_sign_in: ^6.1.4
   intl: ^0.18.1
+  url_launcher: ^6.2.1
   
   firebase_core: ^2.13.1
   firebase_remote_config: ^4.2.2
