@@ -5,7 +5,6 @@ import 'package:cuidapet_api/application/logger/i_logger.dart';
 import 'package:cuidapet_api/entities/user.dart';
 import 'package:cuidapet_api/modules/user/controller/auth_controller.dart';
 import 'package:cuidapet_api/modules/user/service/i_user_service.dart';
-import 'package:dotenv/dotenv.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';

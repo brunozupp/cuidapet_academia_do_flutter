@@ -10,14 +10,14 @@ import 'package:mobx/mobx.dart';
 
 part 'login_controller.g.dart';
 
-class LoginController = _LoginControllerBase with _$LoginController;
+class LoginController = LoginControllerBase with _$LoginController;
 
-abstract class _LoginControllerBase with Store {
+abstract class LoginControllerBase with Store {
   
   final IUserService _userService;
   final IAppLogger _logger;
 
-  _LoginControllerBase({
+  LoginControllerBase({
     required IUserService userService,
     required IAppLogger logger,
   }) : _userService = userService,

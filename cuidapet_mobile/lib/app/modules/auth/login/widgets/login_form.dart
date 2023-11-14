@@ -1,7 +1,7 @@
 part of '../login_page.dart';
 
 class _LoginForm extends StatefulWidget {
-  const _LoginForm({super.key});
+  const _LoginForm();
 
   @override
   State<_LoginForm> createState() => _LoginFormState();

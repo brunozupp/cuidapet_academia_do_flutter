@@ -2,7 +2,6 @@ import 'package:cuidapet_mobile/app/core/helpers/constants.dart';
 import 'package:cuidapet_mobile/app/core/local_storage/local_secure_storage/i_local_secure_storage.dart';
 import 'package:cuidapet_mobile/app/core/local_storage/local_storage/i_local_storage.dart';
 import 'package:cuidapet_mobile/app/models/user_model.dart';
-import 'package:cuidapet_mobile/app/services/address/address_service.dart';
 import 'package:cuidapet_mobile/app/services/address/i_address_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mobx/mobx.dart';

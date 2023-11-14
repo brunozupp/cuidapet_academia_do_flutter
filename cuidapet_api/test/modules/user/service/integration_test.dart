@@ -7,7 +7,6 @@ import 'package:cuidapet_api/modules/user/data/user_repository.dart';
 import 'package:cuidapet_api/modules/user/service/i_user_service.dart';
 import 'package:cuidapet_api/modules/user/service/user_service.dart';
 import '../../../core/log/mock_logger.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,7 +1,7 @@
 part of "../login_page.dart";
 
 class _LoginRegisterButtons extends StatelessWidget {
-  _LoginRegisterButtons({super.key});
+  _LoginRegisterButtons();
 
   final controller = Modular.get<IUserService>();
 
