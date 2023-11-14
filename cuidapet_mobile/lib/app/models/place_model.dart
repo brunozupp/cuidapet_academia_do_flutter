@@ -1,8 +1,9 @@
 
 class PlaceModel {
-  String address;
-  double lat;
-  double lng;
+  
+  final String address;
+  final double lat;
+  final double lng;
   
   PlaceModel({
     required this.address,

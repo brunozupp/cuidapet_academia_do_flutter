@@ -9,6 +9,8 @@ abstract class IAddressRepository {
   // que trabalho localmente no banco de dados sqlite. E uma entidade está mais
   // voltada para as regras de negócio da empresa, enquanto a Model é apenas
   // para movimentação de dados
+  // Aqui poderia colocar um outro sufixo para demarcar classes que utilizo para
+  // trabalhar com banco local, por exemplo, AddressLocalDb ou AddressDb
   Future<List<AddressEntity>> getAddress();
 
   Future<int> saveAddress(AddressEntity entity);

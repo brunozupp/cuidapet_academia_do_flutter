@@ -9,6 +9,10 @@ import 'package:cuidapet_mobile/app/core/rest_client/rest_client_excepiton.dart'
 import 'package:cuidapet_mobile/app/models/place_model.dart';
 import 'package:cuidapet_mobile/app/repositories/address/i_address_repository.dart';
 
+/// Esse repositório é um ótimo exemplo do que deve acontecer dentro de
+/// um Repository. Aqui temos 2 bases de dados diferentes, Local e do Google Places.
+/// E poderia facilmente no futuro ter um método onde faz a chamada para a
+/// minha API.
 class AddressRepository implements IAddressRepository {
 
   final IRestClient _restClient;

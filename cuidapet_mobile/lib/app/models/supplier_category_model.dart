@@ -2,9 +2,9 @@ import 'dart:convert';
 
 class SupplierCategoryModel {
 
-  int id;
-  String name;
-  String type;
+  final int id;
+  final String name;
+  final String type;
 
   SupplierCategoryModel({
     required this.id,
