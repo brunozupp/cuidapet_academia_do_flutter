@@ -60,6 +60,8 @@ class SqliteConnectionFactory {
   Future<void> onUpgrade(Database db, int oldVersion, int newVersion) async {
     final batch = db.batch();
 
+    // Passando a versão antiga que eu estou para poder fazer todas as atualizações
+    // necessárias até chegar na atual
     final migrations = SqliteMigrationFactory().getUpdateMigrations(oldVersion);
 
     for (var migration in migrations) {
