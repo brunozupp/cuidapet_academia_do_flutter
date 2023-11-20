@@ -3,9 +3,10 @@ import 'package:geolocator/geolocator.dart';
 
 typedef TryAgain = void Function();
 
-mixin LocationMixin<E extends StatefulWidget> on State<E> { // Colocando on State faz com que esse mixin seja específico para classes do tipo State e
-                               // com isso eu ganho a utilização de um context
-  
+// Colocando on State faz com que esse mixin seja específico para classes do tipo State e
+// com isso eu ganho a utilização de um context
+mixin LocationMixin<E extends StatefulWidget> on State<E> { 
+                               
   void showDialogLocationServiceUnavailable() {
     showDialog(
       context: context, 

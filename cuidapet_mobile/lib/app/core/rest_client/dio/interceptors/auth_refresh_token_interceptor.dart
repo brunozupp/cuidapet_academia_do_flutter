@@ -36,7 +36,11 @@ class AuthRefreshTokenInterceptor extends Interceptor {
       
       final reqPath = err.requestOptions.path;
       
+      // Se for erro relacionado a Autorização / Proibido
       if(respStatusCode == 403 || respStatusCode == 401) {
+
+        // Caso não seja um erro no endpoint de Refresh Token, eu prossigo com a segunda tentativa
+        // de chamada do Refresh Token e do endpoint que foi chamado que deu não autorizado
         if(reqPath != '/auth/refresh') {
 
           final authRequired = err.requestOptions.extra[Constants.ENV_REST_CLIENT_AUTH_REQUIRED_KEY] ?? false;
@@ -44,8 +48,11 @@ class AuthRefreshTokenInterceptor extends Interceptor {
           if(authRequired) {
             _logger.append("############### REFRESH TOKEN ###############");
 
-            await _refreshToken(err);
+            // Fazendo a chamada para o endpoint de Refresh Token para ter acesso
+            // a um novo AccessToken e RefreshToken
+            await _refreshToken();
 
+            // Uma nova tentativa de chamar o método
             await _retryRequest(err, handler);
 
           } else {
@@ -72,7 +79,7 @@ class AuthRefreshTokenInterceptor extends Interceptor {
     }
   }
   
-  Future<void> _refreshToken(DioError err) async {
+  Future<void> _refreshToken() async {
 
     try {
       final refreshToken = await _localSecureStorage.read(Constants.LOCAL_STORAGE_REFRESH_TOKEN_KEY);

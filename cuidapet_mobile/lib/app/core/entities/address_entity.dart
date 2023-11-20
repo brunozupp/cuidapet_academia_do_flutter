@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
+// Entities são classes para trabalhar com o meu Banco de Dados Local
 class AddressEntity {
 
   final int? id;
